@@ -2,9 +2,10 @@ const input = document.querySelector('#fruit');
 const suggestions = document.querySelector('.suggestions ul');
 
 const fruit = ['Apple', 'Apricot', 'Avocado 🥑', 'Banana', 'Bilberry', 'Blackberry', 'Blackcurrant', 'Blueberry', 'Boysenberry', 'Currant', 'Cherry', 'Coconut', 'Cranberry', 'Cucumber', 'Custard apple', 'Damson', 'Date', 'Dragonfruit', 'Durian', 'Elderberry', 'Feijoa', 'Fig', 'Gooseberry', 'Grape', 'Raisin', 'Grapefruit', 'Guava', 'Honeyberry', 'Huckleberry', 'Jabuticaba', 'Jackfruit', 'Jambul', 'Juniper berry', 'Kiwifruit', 'Kumquat', 'Lemon', 'Lime', 'Loquat', 'Longan', 'Lychee', 'Mango', 'Mangosteen', 'Marionberry', 'Melon', 'Cantaloupe', 'Honeydew', 'Watermelon', 'Miracle fruit', 'Mulberry', 'Nectarine', 'Nance', 'Olive', 'Orange', 'Clementine', 'Mandarine', 'Tangerine', 'Papaya', 'Passionfruit', 'Peach', 'Pear', 'Persimmon', 'Plantain', 'Plum', 'Pineapple', 'Pomegranate', 'Pomelo', 'Quince', 'Raspberry', 'Salmonberry', 'Rambutan', 'Redcurrant', 'Salak', 'Satsuma', 'Soursop', 'Star fruit', 'Strawberry', 'Tamarillo', 'Tamarind', 'Yuzu'];
+const fruitnIdx = fruit.map((eaFruit,idx) => [eaFruit,idx]);
 
 function lowercase (name) {
-	return `'${name}'`.toLowerCase();
+	return name.toLowerCase();
 }
 
 // event listeners and span elements for all fruits
@@ -31,16 +32,14 @@ for (let eaFruit of fruit) {
 	li.append(rSpan);
 }
 
+// returns all indices from fruit array that matches user input
 function search(str) {
-	const resultsIdx = [];
-	fruit.map(eaFruit => lowercase(eaFruit)).filter((eaFruit,idx) => {
-		if (eaFruit.includes(str)) {
-			return resultsIdx.push(idx);
-		}
-	});
+	const fruitArrs = fruitnIdx.filter(fruitArr => fruitArr[0].toLowerCase().includes(lowercase(str)));
+	const resultsIdx = fruitArrs.map(fruitArr => fruitArr[1]);
 	return resultsIdx;
 }
 
+// called everytime keyup from user input
 function searchHandler(e) {
 	const lowercased = lowercase(input.value);
 	const lis = document.querySelectorAll('li');
@@ -87,6 +86,7 @@ function findBold (fruitStyle, inputVal) {
 	}
 }
 
+// based on search function, relies on each index to display corresponding string, calling findBold to only bold user input value, rest of string has normal font weight
 function showSuggestions(resultsIdx, inputVal) {
 	if (inputVal.length === 1) {
 		for (i=0; i<5; i++) {
@@ -111,7 +111,7 @@ function showSuggestions(resultsIdx, inputVal) {
 	}
 	else if (inputVal.length > 1) {
 		for (let idx of resultsIdx) {
-			const fruitStr = fruit[resultsIdx[idx]];
+			const fruitStr = fruit[idx];
 			const queryStr = `li[data-fruit='${fruitStr}']`;
 			const li = document.querySelector(queryStr);
 	
