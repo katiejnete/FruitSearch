@@ -1,0 +1,53 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+  background: linear-gradient(0.25turn, #ffd000, #ff5e00);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.search-container input,
+.search-container .suggestions {
+  background-color: #ffd000;
+  width: 150px;
+}
+
+input:focus {
+  outline: solid rgba(255,255,255,0.5);
+}
+
+input:hover {
+  cursor: default;
+}
+
+ul,li {
+  list-style-type: none;
+  margin: 0;
+  padding: 0; 
+}
+
+ul li {
+  background-color: transparent;
+}
+
+.search-container .suggestions {
+  position: absolute;
+}
+
+.highlight {
+  background-color: #ff5e00;
+}
+
+.center {
+  font-weight: 900;
+}
+
+ul li:hover {
+  cursor: pointer;
+}
