@@ -3,15 +3,8 @@ const suggestions = document.querySelector('.suggestions ul');
 
 const fruit = ['Apple', 'Apricot', 'Avocado 🥑', 'Banana', 'Bilberry', 'Blackberry', 'Blackcurrant', 'Blueberry', 'Boysenberry', 'Currant', 'Cherry', 'Coconut', 'Cranberry', 'Cucumber', 'Custard apple', 'Damson', 'Date', 'Dragonfruit', 'Durian', 'Elderberry', 'Feijoa', 'Fig', 'Gooseberry', 'Grape', 'Raisin', 'Grapefruit', 'Guava', 'Honeyberry', 'Huckleberry', 'Jabuticaba', 'Jackfruit', 'Jambul', 'Juniper berry', 'Kiwifruit', 'Kumquat', 'Lemon', 'Lime', 'Loquat', 'Longan', 'Lychee', 'Mango', 'Mangosteen', 'Marionberry', 'Melon', 'Cantaloupe', 'Honeydew', 'Watermelon', 'Miracle fruit', 'Mulberry', 'Nectarine', 'Nance', 'Olive', 'Orange', 'Clementine', 'Mandarine', 'Tangerine', 'Papaya', 'Passionfruit', 'Peach', 'Pear', 'Persimmon', 'Plantain', 'Plum', 'Pineapple', 'Pomegranate', 'Pomelo', 'Quince', 'Raspberry', 'Salmonberry', 'Rambutan', 'Redcurrant', 'Salak', 'Satsuma', 'Soursop', 'Star fruit', 'Strawberry', 'Tamarillo', 'Tamarind', 'Yuzu'];
 
-// extract only text from fruit array
-function getFruitText (fruit) {
-	const abc = 'abcdefghijklmnopqrstuvwxyz';
-	const fruitText = Array.from(fruit.toLowerCase()).filter(char => abc.includes(char)).map(char => char.toLowerCase()).join('');
-	return fruitText;
-}
-
 function lowercase (name) {
-	return name.toLowerCase();
+	return `'${name}'`.toLowerCase();
 }
 
 // event listeners and span elements for all fruits
@@ -19,9 +12,7 @@ for (let eaFruit of fruit) {
 	const li = document.createElement('li');
 	li.style.display = 'none';
 
-	const fruitText = getFruitText(eaFruit);
-	li.setAttribute('data-fruit',fruitText);
-	li.setAttribute('data-fruit-style',eaFruit);
+	li.setAttribute('data-fruit',eaFruit);
 	li.addEventListener('mouseenter',highlight);
 	li.addEventListener('mouseleave',regular);
 	li.addEventListener('click', useSuggestion);
@@ -41,9 +32,13 @@ for (let eaFruit of fruit) {
 }
 
 function search(str) {
-	let results = [];
-	results = fruit.map(eaFruit => getFruitText(eaFruit)).filter(eaFruit => eaFruit.includes(str));
-	return results;
+	const resultsIdx = [];
+	fruit.map(eaFruit => lowercase(eaFruit)).filter((eaFruit,idx) => {
+		if (eaFruit.includes(str)) {
+			return resultsIdx.push(idx);
+		}
+	});
+	return resultsIdx;
 }
 
 function searchHandler(e) {
@@ -56,8 +51,8 @@ function searchHandler(e) {
 		center.innerText = '';
 		right.innerText = '';
 	}
-		const results = search(lowercased);
-		showSuggestions(results, input.value);
+		const resultsIdx = search(lowercased);
+		showSuggestions(resultsIdx, input.value);
 }
 
 // bolding what matches with input value
@@ -92,14 +87,14 @@ function findBold (fruitStyle, inputVal) {
 	}
 }
 
-function showSuggestions(results, inputVal) {
+function showSuggestions(resultsIdx, inputVal) {
 	if (inputVal.length === 1) {
 		for (i=0; i<5; i++) {
-			results[i] = getFruitText(results[i]);
-			const queryStr = `li[data-fruit=${results[i]}]`;
+			const fruitStr = fruit[resultsIdx[i]];
+			const queryStr = `li[data-fruit='${fruitStr}']`;
 			const li = document.querySelector(queryStr);
 	
-			const fruitStyle = li.dataset.fruitStyle;
+			const fruitStyle = fruitStr;
 			const findBoldResults = findBold(fruitStyle, inputVal);
 			if (!findBoldResults) li.style.display = 'none';
 			else {
@@ -115,12 +110,12 @@ function showSuggestions(results, inputVal) {
 		}
 	}
 	else if (inputVal.length > 1) {
-		for (let result of results) {
-			result = getFruitText(result);
-			const queryStr = `li[data-fruit=${result}]`;
+		for (let idx of resultsIdx) {
+			const fruitStr = fruit[resultsIdx[idx]];
+			const queryStr = `li[data-fruit='${fruitStr}']`;
 			const li = document.querySelector(queryStr);
 	
-			const fruitStyle = li.dataset.fruitStyle;
+			const fruitStyle = fruitStr;
 			const findBoldResults = findBold(fruitStyle, inputVal);
 			if (!findBoldResults) li.style.display = 'none';
 			else {
