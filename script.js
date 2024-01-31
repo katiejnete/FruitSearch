@@ -9,27 +9,29 @@ function lowercase (name) {
 }
 
 // event listeners and span elements for all fruits
-for (let eaFruit of fruit) {
-	const li = document.createElement('li');
-	li.style.display = 'none';
-
-	li.setAttribute('data-fruit',eaFruit);
-	li.addEventListener('mouseenter',highlight);
-	li.addEventListener('mouseleave',regular);
-	li.addEventListener('click', useSuggestion);
-	suggestions.append(li);
-
-	const lSpan = document.createElement('span');
-	lSpan.classList.add('left');
-	li.append(lSpan);
-
-	const cSpan = document.createElement('span');
-	cSpan.classList.add('center');
-	li.append(cSpan);
-
-	const rSpan = document.createElement('span');
-	rSpan.classList.add('right');
-	li.append(rSpan);
+if (suggestions) {
+	for (let eaFruit of fruit) {
+		const li = document.createElement('li');
+		li.style.display = 'none';
+	
+		li.setAttribute('data-fruit',eaFruit);
+		li.addEventListener('mouseenter',highlight);
+		li.addEventListener('mouseleave',regular);
+		li.addEventListener('click', useSuggestion);
+		suggestions.append(li);
+	
+		const lSpan = document.createElement('span');
+		lSpan.classList.add('left');
+		li.append(lSpan);
+	
+		const cSpan = document.createElement('span');
+		cSpan.classList.add('center');
+		li.append(cSpan);
+	
+		const rSpan = document.createElement('span');
+		rSpan.classList.add('right');
+		li.append(rSpan);
+	}
 }
 
 // returns all indices from fruit array that matches user input
@@ -63,7 +65,7 @@ function findBold (fruitStyle, inputVal) {
 			if (currIdx < idx) arr.push(curr);
 			return arr;
 		},[]);
-		// if there is a space within idx and idx + inputVal.length then include space in bold
+		// accoutns for space if there is a space within idx and idx + inputVal.length then include space in bold
 		const bold = fruitArr.reduce((arr,curr, currIdx) => {
 			const spcIdx = fruitStyle.indexOf(' ');
 			if (spcIdx > idx && spcIdx <= idx + inputVal.length) {
@@ -75,6 +77,7 @@ function findBold (fruitStyle, inputVal) {
 				return arr;	
 			}
 		},[]);
+		// accounts for space like name + space + emoji
 		const rUnbold = fruitArr.reduce((arr,curr, currIdx) => {
 			if (currIdx >= idx + inputVal.length) arr.push(curr);
 			return arr;
@@ -153,5 +156,6 @@ function useSuggestion(e) {
 		input.value = e.target.parentElement.textContent;
 	}
 }
-
-input.addEventListener('keyup', searchHandler);
+if (input) {
+	input.addEventListener('keyup', searchHandler);
+}
