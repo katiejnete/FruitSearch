@@ -1,161 +1,161 @@
-const input = document.querySelector('#fruit');
-const suggestions = document.querySelector('.suggestions ul');
+const input = document.querySelector("#fruit");
+const suggestions = document.querySelector(".suggestions ul");
 
-const fruit = ['Apple', 'Apricot', 'Avocado 🥑', 'Banana', 'Bilberry', 'Blackberry', 'Blackcurrant', 'Blueberry', 'Boysenberry', 'Currant', 'Cherry', 'Coconut', 'Cranberry', 'Cucumber', 'Custard apple', 'Damson', 'Date', 'Dragonfruit', 'Durian', 'Elderberry', 'Feijoa', 'Fig', 'Gooseberry', 'Grape', 'Raisin', 'Grapefruit', 'Guava', 'Honeyberry', 'Huckleberry', 'Jabuticaba', 'Jackfruit', 'Jambul', 'Juniper berry', 'Kiwifruit', 'Kumquat', 'Lemon', 'Lime', 'Loquat', 'Longan', 'Lychee', 'Mango', 'Mangosteen', 'Marionberry', 'Melon', 'Cantaloupe', 'Honeydew', 'Watermelon', 'Miracle fruit', 'Mulberry', 'Nectarine', 'Nance', 'Olive', 'Orange', 'Clementine', 'Mandarine', 'Tangerine', 'Papaya', 'Passionfruit', 'Peach', 'Pear', 'Persimmon', 'Plantain', 'Plum', 'Pineapple', 'Pomegranate', 'Pomelo', 'Quince', 'Raspberry', 'Salmonberry', 'Rambutan', 'Redcurrant', 'Salak', 'Satsuma', 'Soursop', 'Star fruit', 'Strawberry', 'Tamarillo', 'Tamarind', 'Yuzu'];
-const fruitnIdx = fruit.map((eaFruit,idx) => [eaFruit,idx]);
+const fruit = [
+  "Apple",
+  "Apricot",
+  "Avocado 🥑",
+  "Banana",
+  "Bilberry",
+  "Blackberry",
+  "Blackcurrant",
+  "Blueberry",
+  "Boysenberry",
+  "Currant",
+  "Cherry",
+  "Coconut",
+  "Cranberry",
+  "Cucumber",
+  "Custard apple",
+  "Damson",
+  "Date",
+  "Dragonfruit",
+  "Durian",
+  "Elderberry",
+  "Feijoa",
+  "Fig",
+  "Gooseberry",
+  "Grape",
+  "Raisin",
+  "Grapefruit",
+  "Guava",
+  "Honeyberry",
+  "Huckleberry",
+  "Jabuticaba",
+  "Jackfruit",
+  "Jambul",
+  "Juniper berry",
+  "Kiwifruit",
+  "Kumquat",
+  "Lemon",
+  "Lime",
+  "Loquat",
+  "Longan",
+  "Lychee",
+  "Mango",
+  "Mangosteen",
+  "Marionberry",
+  "Melon",
+  "Cantaloupe",
+  "Honeydew",
+  "Watermelon",
+  "Miracle fruit",
+  "Mulberry",
+  "Nectarine",
+  "Nance",
+  "Olive",
+  "Orange",
+  "Clementine",
+  "Mandarine",
+  "Tangerine",
+  "Papaya",
+  "Passionfruit",
+  "Peach",
+  "Pear",
+  "Persimmon",
+  "Plantain",
+  "Plum",
+  "Pineapple",
+  "Pomegranate",
+  "Pomelo",
+  "Quince",
+  "Raspberry",
+  "Salmonberry",
+  "Rambutan",
+  "Redcurrant",
+  "Salak",
+  "Satsuma",
+  "Soursop",
+  "Star fruit",
+  "Strawberry",
+  "Tamarillo",
+  "Tamarind",
+  "Yuzu",
+];
 
-function lowercase (name) {
-	return name.toLowerCase();
-}
-
-// event listeners and span elements for all fruits
-if (suggestions) {
-	for (let eaFruit of fruit) {
-		const li = document.createElement('li');
-		li.style.display = 'none';
-	
-		li.setAttribute('data-fruit',eaFruit);
-		li.addEventListener('mouseenter',highlight);
-		li.addEventListener('mouseleave',regular);
-		li.addEventListener('click', useSuggestion);
-		suggestions.append(li);
-	
-		const lSpan = document.createElement('span');
-		lSpan.classList.add('left');
-		li.append(lSpan);
-	
-		const cSpan = document.createElement('span');
-		cSpan.classList.add('center');
-		li.append(cSpan);
-	
-		const rSpan = document.createElement('span');
-		rSpan.classList.add('right');
-		li.append(rSpan);
-	}
-}
-
-// returns all indices from fruit array that matches user input
 function search(str) {
-	const fruitArrs = fruitnIdx.filter(fruitArr => fruitArr[0].toLowerCase().includes(lowercase(str)));
-	const resultsIdx = fruitArrs.map(fruitArr => fruitArr[1]);
-	return resultsIdx;
+  let results = [];
+  results = fruit.filter((eaFruit) =>
+    eaFruit.toLowerCase().includes(str.toLowerCase())
+  );
+  return results;
 }
 
-// called everytime keyup from user input
 function searchHandler(e) {
-	const lowercased = lowercase(input.value);
-	const lis = document.querySelectorAll('li');
-	for (let li of lis) {
-		li.style.display = 'none';
-		const [left, center, right] = [li.children[0], li.children[1], li.children[2]];
-		left.innerText = '';
-		center.innerText = '';
-		right.innerText = '';
-	}
-		const resultsIdx = search(lowercased);
-		showSuggestions(resultsIdx, input.value);
+  const inputVal = e.target.value;
+  const results = search(inputVal);
+  showSuggestions(results, inputVal);
 }
 
-// bolding what matches with input value
-function findBold (fruitStyle, inputVal) {
-	const idx = lowercase(fruitStyle).indexOf(lowercase(inputVal));
-	if (idx !== -1) {
-		const fruitArr = [...fruitStyle];
-		const lUnbold = fruitArr.reduce((arr,curr, currIdx) => {
-			if (currIdx < idx) arr.push(curr);
-			return arr;
-		},[]);
-		// accoutns for space if there is a space within idx and idx + inputVal.length then include space in bold
-		const bold = fruitArr.reduce((arr,curr, currIdx) => {
-			const spcIdx = fruitStyle.indexOf(' ');
-			if (spcIdx > idx && spcIdx <= idx + inputVal.length) {
-				if (currIdx >= idx && currIdx < idx + inputVal.length + 1) arr.push(curr);
-				return arr;
-			}
-			else {
-				if (currIdx >= idx && currIdx < idx + inputVal.length) arr.push(curr);
-				return arr;	
-			}
-		},[]);
-		// accounts for space like name + space + emoji
-		const rUnbold = fruitArr.reduce((arr,curr, currIdx) => {
-			if (currIdx >= idx + inputVal.length) arr.push(curr);
-			return arr;
-		},[]);
-		return [lUnbold.join(''), bold.join(''), rUnbold.join('')];
-	}
-	else if (idx === -1) {
-		return false;
-	}
+function removeLis() {
+  while (suggestions.firstChild) {
+    suggestions.removeChild(suggestions.firstChild);
+  }
 }
 
-// based on search function, relies on each index to display corresponding string, calling findBold to only bold user input value, rest of string has normal font weight
-function showSuggestions(resultsIdx, inputVal) {
-	if (inputVal.length === 1) {
-		for (i=0; i<5; i++) {
-			const fruitStr = fruit[resultsIdx[i]];
-			const queryStr = `li[data-fruit='${fruitStr}']`;
-			const li = document.querySelector(queryStr);
-	
-			const fruitStyle = fruitStr;
-			const findBoldResults = findBold(fruitStyle, inputVal);
-			if (!findBoldResults) li.style.display = 'none';
-			else {
-				const [lUnbold, bold, rUnbold] = findBoldResults;
-				const [left, center, right] = [li.children[0], li.children[1], li.children[2]];
-				
-				left.innerText = lUnbold;
-				center.innerText = bold;
-				right.innerText = rUnbold;
-		
-				li.style.display = 'block';	
-			}
-		}
-	}
-	else if (inputVal.length > 1) {
-		for (let idx of resultsIdx) {
-			const fruitStr = fruit[idx];
-			const queryStr = `li[data-fruit='${fruitStr}']`;
-			const li = document.querySelector(queryStr);
-	
-			const fruitStyle = fruitStr;
-			const findBoldResults = findBold(fruitStyle, inputVal);
-			if (!findBoldResults) li.style.display = 'none';
-			else {
-				const [lUnbold, bold, rUnbold] = findBoldResults;
-				const [left, center, right] = [li.children[0], li.children[1], li.children[2]];
-				
-				left.innerText = lUnbold;
-				center.innerText = bold;
-				right.innerText = rUnbold;
-		
-				li.style.display = 'block';	
-			}
-		}
-	}
+function findBold(item, inputVal) {
+  const idx1 = item.toLowerCase().indexOf(inputVal.toLowerCase());
+  let idx2 = idx1 + inputVal.length + 1;
+  if (!item.slice(idx1, idx2).includes(" ")) {
+    idx2--;
+  }
+  const bold = item.slice(idx1, idx2);
+  const unbold = [item.slice(0, idx1), item.slice(idx2)];
+  return [unbold, bold];
 }
 
-function highlight (e) {
-	e.target.classList.toggle('highlight');
+function createBold(showAll, results, inputVal) {
+  let length;
+  removeLis();
+  if (showAll) {
+    length = results.length;
+  } else {
+    length = 5;
+  }
+  for (i = 0; i < length; i++) {
+    const item = results[i];
+    const li = document.createElement("li");
+    const outerSpan1 = document.createElement("span");
+    li.append(outerSpan1);
+    const boldResults = findBold(item, inputVal);
+    outerSpan1.innerText = boldResults[0][0];
+    const innerSpan = document.createElement("span");
+    innerSpan.innerText = boldResults[1];
+    innerSpan.classList.add("bold");
+    outerSpan1.append(innerSpan);
+    const outerSpan2 = document.createElement("span");
+    outerSpan2.innerText = boldResults[0][1];
+    li.append(outerSpan2);
+    suggestions.append(li);
+  }
 }
 
-function regular (e) {
-	e.target.classList.toggle('highlight');
+function showSuggestions(results, inputVal) {
+  if (inputVal.length === 0) {
+    removeLis();
+    return;
+  }
+  if (inputVal.length > 1) {
+    createBold(true, results, inputVal);
+  } else {
+    createBold(false, results, inputVal);
+  }
 }
 
-// clicking on a suggestion
 function useSuggestion(e) {
-	const lis = document.querySelectorAll('li');
-	for (let li of lis) {
-		li.style.display = 'none';
-	}
-	if (e.target.tagName === 'LI') {
-		input.value = e.target.textContent;
-	}
-	else {
-		input.value = e.target.parentElement.textContent;
-	}
+  removeLis();
+  input.value = e.target.innerText;
 }
-if (input) {
-	input.addEventListener('keyup', searchHandler);
-}
+
+input.addEventListener("keyup", searchHandler);
+suggestions.addEventListener("click", useSuggestion);

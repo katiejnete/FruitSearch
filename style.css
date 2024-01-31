@@ -44,10 +44,11 @@ ul li {
   background-color: #ff5e00;
 }
 
-.center {
-  font-weight: 900;
-}
-
 ul li:hover {
   cursor: pointer;
+  background-color: #ff5e00;
+}
+
+.bold {
+  font-weight: 900;
 }
