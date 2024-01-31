@@ -153,9 +153,12 @@ function showSuggestions(results, inputVal) {
 }
 
 function useSuggestion(e) {
+  console.log(e.target);
   removeLis();
   input.value = e.target.innerText;
 }
 
-input.addEventListener("keyup", searchHandler);
-suggestions.addEventListener("click", useSuggestion);
+if (input) {
+  input.addEventListener("keyup", searchHandler);
+  suggestions.addEventListener("click", useSuggestion);
+}
